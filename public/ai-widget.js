@@ -6,24 +6,24 @@
       label: 'Hukum',
       color: '#f59e0b',
       items: [
-        { q: 'Siapa Tom Lembong dan kenapa ia jadi tersangka?', icon: '⚖️', scenario: 'tom_lembong', url: 'ai-chat-tom.html' }
+        { q: 'Siapa Tom Lembong dan kenapa ia jadi tersangka?', icon: '⚖️', scenario: 'tom_lembong', url: 'ai-chat.html' }
       ]
     },
     {
       label: 'Kesehatan',
       color: '#10b981',
       items: [
-        { q: 'Wabah campak 2026: seberapa luas penyebarannya?',      icon: '🦠', scenario: 'campak_outbreak', url: 'ai-chat-campak.html' },
-        { q: 'Campak ini berbahaya nggak?',                           icon: '💉', scenario: 'campak_bahaya',  url: 'ai-chat-campak2.html' },
-        { q: 'Masih bahaya nggak campaknya? Ada perkembangan baru?',  icon: '🔄', scenario: 'campak_depth',   url: 'ai-chat-campak2.html' },
-        { q: 'Kirana sudah vaksin kemarin. Masih perlu khawatir?',    icon: '✅', scenario: 'campak_resolved',url: 'ai-chat-campak2.html' }
+        { q: 'Wabah campak 2026: seberapa luas penyebarannya?',      icon: '🦠', scenario: 'campak_outbreak', url: 'ai-chat.html' },
+        { q: 'Campak ini berbahaya nggak?',                           icon: '💉', scenario: 'campak_bahaya',  url: 'ai-chat.html' },
+        { q: 'Masih bahaya nggak campaknya? Ada perkembangan baru?',  icon: '🔄', scenario: 'campak_depth',   url: 'ai-chat.html' },
+        { q: 'Kirana sudah vaksin kemarin. Masih perlu khawatir?',    icon: '✅', scenario: 'campak_resolved',url: 'ai-chat.html' }
       ]
     },
     {
       label: 'Properti',
       color: '#818cf8',
       items: [
-        { q: 'Kapan waktu terbaik untuk take over KPR?', icon: '💵', scenario: 'cicilan_kpr', url: 'ai-chat-kpr.html' }
+        { q: 'Kapan waktu terbaik untuk take over KPR?', icon: '💵', scenario: 'cicilan_kpr', url: 'ai-chat.html' }
       ]
     }
   ];

@@ -11,6 +11,10 @@
     :root {
       --red: #e8192c;
       --red-dark: #c0121f;
+      --accent: #6366f1;
+      --accent-dark: #4f46e5;
+      --accent-light: rgba(99,102,241,0.08);
+      --teal: #0d9488;
       --text: #1a1a1a;
       --muted: #6b6b6b;
       --border: #e8e8e8;
@@ -18,6 +22,8 @@
       --white: #ffffff;
       --sidebar-w: 280px;
       --panel-w: 272px;
+      --sidebar-collapsed-w: 52px;
+      --panel-collapsed-w: 48px;
     }
     html, body { height: 100%; }
     body {
@@ -61,7 +67,7 @@
       color: var(--text);
     }
     .ai-label .badge {
-      background: var(--red);
+      background: var(--accent);
       color: #fff;
       font-size: 10px;
       font-weight: 900;
@@ -90,20 +96,48 @@
     /* ── SIDEBAR ── */
     .chat-sidebar {
       width: var(--sidebar-w);
-      background: #1a1a1a;
+      background: #13131a;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
       overflow: hidden;
+      transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
     }
+    .chat-sidebar.collapsed { width: var(--sidebar-collapsed-w); }
+    .chat-sidebar.collapsed .sidebar-section-label,
+    .chat-sidebar.collapsed .chat-history .hi-text,
+    .chat-sidebar.collapsed .chat-history .hi-time,
+    .chat-sidebar.collapsed .sidebar-topics,
+    .chat-sidebar.collapsed .new-chat-btn .btn-label { display: none; }
+    .chat-sidebar.collapsed .history-item { justify-content: center; padding: 9px 0; }
+    .chat-sidebar.collapsed .history-item .hi-icon { margin: 0; font-size: 16px; }
+    .chat-sidebar.collapsed .sidebar-head { padding: 10px 8px; gap: 0; }
+    .chat-sidebar.collapsed .new-chat-btn { padding: 10px 0; justify-content: center; }
+    .chat-sidebar.collapsed .chat-history { padding: 0 4px 8px; }
+
     .sidebar-head {
-      padding: 16px;
-      border-bottom: 1px solid #2a2a2a;
+      padding: 12px 12px 12px 16px;
+      border-bottom: 1px solid #1e1e2e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+    .sidebar-toggle-btn {
+      width: 30px; height: 30px;
+      border: none; border-radius: 7px;
+      background: #1e1e2e;
+      color: #666;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar-toggle-btn:hover { background: #2a2a3a; color: #aaa; }
     .new-chat-btn {
-      width: 100%;
-      padding: 10px;
-      background: var(--red);
+      flex: 1;
+      padding: 9px 12px;
+      background: var(--accent);
       border: none;
       border-radius: 8px;
       color: #fff;
@@ -116,8 +150,10 @@
       justify-content: center;
       gap: 8px;
       transition: background 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
     }
-    .new-chat-btn:hover { background: var(--red-dark); }
+    .new-chat-btn:hover { background: var(--accent-dark); }
 
     .sidebar-section-label {
       font-size: 10px;
@@ -146,8 +182,8 @@
       line-height: 1.4;
       transition: background 0.12s;
     }
-    .history-item:hover { background: #252525; color: #fff; }
-    .history-item.active { background: #2a2a2a; color: #fff; }
+    .history-item:hover { background: #1e1e2e; color: #fff; }
+    .history-item.active { background: rgba(99,102,241,0.18); color: #a5b4fc; border-left: 2px solid var(--accent); padding-left: 8px; }
     .history-item .hi-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
     .history-item .hi-text { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .history-item .hi-time { font-size: 10px; color: #444; flex-shrink: 0; margin-top: 2px; }
@@ -167,7 +203,7 @@
       cursor: pointer;
       transition: background 0.12s, color 0.12s;
     }
-    .topic-chip:hover { background: #252525; color: #fff; }
+    .topic-chip:hover { background: #1e1e2e; color: #fff; }
     .topic-chip .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
     /* ── CHAT MAIN ── */
@@ -193,7 +229,7 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: var(--red);
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -228,7 +264,7 @@
       font-size: 15px;
       transition: border-color 0.15s, color 0.15s;
     }
-    .icon-btn:hover { border-color: var(--red); color: var(--red); }
+    .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
 
     /* Messages area */
     .chat-messages {
@@ -257,11 +293,11 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: var(--red);
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 24px rgba(232,25,44,0.3);
+      box-shadow: 0 4px 24px rgba(99,102,241,0.35);
       margin-bottom: 8px;
     }
     .chat-welcome h2 { font-size: 22px; font-weight: 900; }
@@ -284,7 +320,7 @@
       font-family: inherit;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .starter-card:hover { border-color: var(--red); box-shadow: 0 2px 12px rgba(232,25,44,0.1); }
+    .starter-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(99,102,241,0.14); }
     .starter-card .sc-icon { font-size: 20px; margin-bottom: 6px; }
     .starter-card .sc-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
     .starter-card .sc-desc { font-size: 11px; color: var(--muted); line-height: 1.45; }
@@ -314,7 +350,7 @@
       font-size: 14px;
       margin-top: 2px;
     }
-    .msg-row.bot .msg-avatar { background: var(--red); }
+    .msg-row.bot .msg-avatar { background: linear-gradient(135deg, var(--accent), #8b5cf6); }
     .msg-row.user .msg-avatar { background: #1a1a1a; color: #fff; font-size: 12px; font-weight: 700; }
 
     .msg-content { display: flex; flex-direction: column; gap: 4px; }
@@ -335,7 +371,7 @@
       color: var(--text);
     }
     .msg-row.user .msg-bubble {
-      background: var(--red);
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
       color: #fff;
       border-top-right-radius: 4px;
     }
@@ -363,8 +399,8 @@
       cursor: pointer;
       transition: background 0.12s;
     }
-    .source-pill:hover { background: #e8e8f0; color: var(--red); }
-    .source-pill .sp-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
+    .source-pill:hover { background: #e8e8f0; color: var(--accent); }
+    .source-pill .sp-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
 
     /* Typing indicator */
     .typing-indicator {
@@ -389,7 +425,7 @@
     .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes typingDot {
       0%, 60%, 100% { transform: translateY(0); background: #ccc; }
-      30% { transform: translateY(-5px); background: var(--red); }
+      30% { transform: translateY(-5px); background: var(--accent); }
     }
 
     /* ── INPUT AREA ── */
@@ -412,7 +448,7 @@
       padding: 6px 6px 6px 16px;
       transition: border-color 0.15s;
     }
-    .input-row:focus-within { border-color: var(--red); }
+    .input-row:focus-within { border-color: var(--accent); }
     #main-chat-input {
       flex: 1;
       border: none;
@@ -441,21 +477,21 @@
       justify-content: center;
       transition: color 0.12s;
     }
-    .input-action-btn:hover { color: var(--red); }
+    .input-action-btn:hover { color: var(--accent); }
     #main-send-btn {
       width: 38px;
       height: 38px;
       border-radius: 10px;
-      background: var(--red);
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.15s, transform 0.1s;
+      transition: opacity 0.15s, transform 0.1s;
       flex-shrink: 0;
     }
-    #main-send-btn:hover { background: var(--red-dark); }
+    #main-send-btn:hover { opacity: 0.88; }
     #main-send-btn:active { transform: scale(0.95); }
     #main-send-btn:disabled { background: #ddd; cursor: not-allowed; }
 
@@ -486,7 +522,7 @@
       transition: border-color 0.12s, color 0.12s;
       white-space: nowrap;
     }
-    .qp-btn:hover { border-color: var(--red); color: var(--red); }
+    .qp-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 
     /* ── RIGHT MEMORY PANEL ── */
     .memory-panel {
@@ -498,9 +534,30 @@
       overflow: hidden;
       border-left: 1px solid #1e1e28;
       font-family: 'Lato', sans-serif;
+      transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
     }
+    .memory-panel.collapsed { width: var(--panel-collapsed-w); }
+    .memory-panel.collapsed .mp-body,
+    .memory-panel.collapsed .mp-footer,
+    .memory-panel.collapsed .mp-title,
+    .memory-panel.collapsed .mp-live { display: none; }
+    .memory-panel.collapsed .mp-header { justify-content: center; padding: 12px 0; }
+    .memory-panel .panel-collapsed-label {
+      display: none;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #444;
+      margin-top: 12px;
+      align-self: center;
+    }
+    .memory-panel.collapsed .panel-collapsed-label { display: block; }
+
     .mp-header {
-      padding: 14px 16px 12px;
+      padding: 12px 14px;
       border-bottom: 1px solid #1e1e28;
       display: flex;
       align-items: center;
@@ -529,6 +586,18 @@
       background: #4ade80;
       animation: livepulse 1.8s ease infinite;
     }
+    .panel-toggle-btn {
+      width: 26px; height: 26px;
+      border: none; border-radius: 6px;
+      background: #1e1e2e;
+      color: #555;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 12px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .panel-toggle-btn:hover { background: #2a2a3a; color: #888; }
     @keyframes livepulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
@@ -594,9 +663,9 @@
     .mp-section-body { padding: 8px 10px; }
 
     /* User Memory */
-    .mp-section.user-mem .sec-icon { background: rgba(232,25,44,0.15); }
-    .mp-section.user-mem .sec-label { color: #e8192c; }
-    .mp-section.user-mem .sec-count { background: rgba(232,25,44,0.15); color: #e8192c; }
+    .mp-section.user-mem .sec-icon { background: rgba(13,148,136,0.15); }
+    .mp-section.user-mem .sec-label { color: #2dd4bf; }
+    .mp-section.user-mem .sec-count { background: rgba(13,148,136,0.15); color: #2dd4bf; }
 
     /* Session Memory */
     .mp-section.session-mem .sec-icon { background: rgba(99,102,241,0.15); }
@@ -738,6 +807,75 @@
     .token-row .tk-val { color: #666; font-family: monospace; }
     .token-bar-wrap { height: 3px; background: #1e1e28; border-radius: 2px; overflow: hidden; }
     .token-bar { height: 100%; background: linear-gradient(90deg, #34d399, #818cf8); border-radius: 2px; transition: width 0.4s ease; }
+
+    /* User Memory JSON */
+    .um-json { font-family: 'Courier New', monospace; font-size: 10px; line-height: 1.7; white-space: pre-wrap; word-break: break-all; color: #777; }
+    .um-json .jp { color: #555; }
+    .um-json .jk { color: #818cf8; }
+    .um-json .js { color: #34d399; }
+    .um-json .jc { color: #f59e0b; }
+    .um-json .je { color: #555; }
+
+    /* Follow-up buttons (shared by all scenarios) */
+    .scenario-followups {
+      max-width: 780px; align-self: flex-start; margin-left: 44px;
+      display: flex; flex-direction: column; gap: 8px; animation: msgSlide 0.3s ease both;
+    }
+    .scenario-followups .fu-label { font-size: 11px; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+    .fu-btn {
+      display: flex; align-items: center; gap: 10px; background: #fff;
+      border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 10px 14px;
+      font-family: inherit; font-size: 13px; color: #1a1a1a; cursor: pointer;
+      text-align: left; line-height: 1.45; transition: all 0.15s;
+    }
+    .fu-btn:hover { border-color: #e8192c; background: #fff5f5; transform: translateX(3px); }
+    .fu-num { width: 22px; height: 22px; border-radius: 50%; background: #e8192c; color: #fff; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .fu-text { flex: 1; }
+    .fu-arrow { color: #e8192c; font-size: 18px; font-weight: 700; }
+
+    .demo-toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #1a1a1a; color: #fff; padding: 10px 18px; border-radius: 24px;
+      font-size: 12px; font-family: 'Lato', sans-serif; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      z-index: 99999; animation: toastIn 0.3s ease both;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+    /* KPR simulation table */
+    .sim-table { width: 100%; border-collapse: collapse; margin: 10px 0 6px; font-size: 12.5px; border-radius: 8px; overflow: hidden; border: 1px solid #e8e8e8; }
+    .sim-table thead tr { background: #f4f4f6; }
+    .sim-table th { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4px; color: #888; padding: 7px 12px; border-bottom: 1px solid #e8e8e8; text-align: left; }
+    .sim-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    .sim-table tr:last-child td { border-bottom: none; }
+    .sim-table .col-label { font-size: 12px; color: #555; font-weight: 700; }
+    .sim-table .col-curr { color: #6b6b6b; }
+    .sim-table .col-new  { color: #059669; font-weight: 700; }
+    .sim-table .savings-row td { background: #f0fdf4; }
+    .sim-table .savings-val { color: #059669; font-size: 15px; font-weight: 900; }
+    .sim-table .savings-empty { color: #ccc; font-size: 14px; text-align: center; }
+    .sim-section-label { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; color: #999; margin-top: 14px; margin-bottom: 4px; }
+
+    /* KPR orchestrator pill */
+    .orch-pill { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #4f46e5, #818cf8); color: #fff; font-size: 11px; font-weight: 700; padding: 5px 13px; border-radius: 999px; letter-spacing: 0.3px; text-transform: uppercase; margin: 4px 0 -2px 44px; box-shadow: 0 2px 8px rgba(129,140,248,0.4); }
+    .orch-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; flex-shrink: 0; animation: orchpulse 1.2s ease-in-out infinite; }
+    @keyframes orchpulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.75); } }
+    .orch-bot-tags { display: inline-flex; gap: 5px; margin-left: 2px; }
+    .orch-bot-tag { background: rgba(255,255,255,0.2); border-radius: 6px; padding: 1px 6px; font-size: 9px; font-weight: 900; letter-spacing: 0.3px; }
+
+    /* KPR process steps */
+    .process-steps { display: flex; flex-direction: column; margin: 10px 0 4px; }
+    .process-step { display: flex; gap: 14px; padding: 10px 0; }
+    .process-step:not(:last-child) { border-bottom: 1px solid #f0f0f0; }
+    .step-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 26px; }
+    .step-num { width: 26px; height: 26px; border-radius: 50%; background: #818cf8; color: #fff; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-connector { flex: 1; width: 1px; background: #ececec; margin: 4px 0; min-height: 12px; }
+    .step-body { flex: 1; padding-top: 2px; }
+    .step-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+    .step-title { font-size: 13px; font-weight: 700; color: #1a1a1a; }
+    .step-duration { font-size: 10px; font-weight: 700; color: #818cf8; background: rgba(129,140,248,0.1); border-radius: 6px; padding: 1px 7px; white-space: nowrap; }
+    .step-desc { font-size: 12.5px; color: #555; line-height: 1.6; }
+    .step-desc strong { color: #1a1a1a; }
+    .process-note { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #92400e; margin-top: 10px; line-height: 1.55; }
   </style>
 <link rel="stylesheet" href="/brand/brand.css" />
 <link rel="stylesheet" href="/brand/chat-overrides.css" />
@@ -752,9 +890,9 @@
     <div class="divider-v"></div>
     <div class="ai-label">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="10" stroke="#e8192c" stroke-width="1.5"/>
-        <path d="M8 10h8M8 14h5" stroke="#e8192c" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M12 3v1.5M12 19.5V21M3 12h1.5M19.5 12H21" stroke="#e8192c" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="12" cy="12" r="10" stroke="#6366f1" stroke-width="1.5"/>
+        <path d="M8 10h8M8 14h5" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M12 3v1.5M12 19.5V21M3 12h1.5M19.5 12H21" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
       detik AI
       <span class="badge">BETA</span>
@@ -769,13 +907,18 @@
 <div class="chat-layout">
 
   <!-- SIDEBAR -->
-  <aside class="chat-sidebar">
+  <aside class="chat-sidebar" id="chat-sidebar">
     <div class="sidebar-head">
+      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" title="Toggle sidebar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/>
+        </svg>
+      </button>
       <button class="new-chat-btn" id="new-chat-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
           <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
         </svg>
-        Chat Baru
+        <span class="btn-label">Chat Baru</span>
       </button>
     </div>
 
@@ -923,11 +1066,17 @@
   </div><!-- /chat-main -->
 
   <!-- RIGHT MEMORY PANEL -->
-  <aside class="memory-panel">
+  <aside class="memory-panel" id="memory-panel">
     <div class="mp-header">
       <span class="mp-title">AI Context</span>
       <span class="mp-live">Live</span>
+      <button class="panel-toggle-btn" id="panel-toggle-btn" title="Toggle panel">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
     </div>
+    <span class="panel-collapsed-label">AI Context</span>
     <div class="mp-body">
 
       <!-- User Memory -->
@@ -1380,6 +1529,818 @@
   // Init
   renderUserMemory();
   renderSessionMemory();
+
+  // ── Sidebar + Panel collapse ──
+  const sidebarEl    = document.getElementById('chat-sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle-btn');
+  const panelEl       = document.getElementById('memory-panel');
+  const panelToggle   = document.getElementById('panel-toggle-btn');
+
+  function updateSidebarIcon(collapsed) {
+    sidebarToggle.innerHTML = collapsed
+      ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>`
+      : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>`;
+  }
+
+  function updatePanelIcon(collapsed) {
+    panelToggle.innerHTML = collapsed
+      ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>`
+      : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>`;
+  }
+
+  sidebarToggle.addEventListener('click', () => {
+    const collapsed = sidebarEl.classList.toggle('collapsed');
+    updateSidebarIcon(collapsed);
+  });
+
+  panelToggle.addEventListener('click', () => {
+    const collapsed = panelEl.classList.toggle('collapsed');
+    updatePanelIcon(collapsed);
+  });
+
+  // ── Shared helper for follow-up containers ──
+  function makeFollowUpsContainer(questions, onClickFn) {
+    const container = document.createElement('div');
+    container.className = 'scenario-followups';
+    container.innerHTML = `
+      <div class="fu-label">Tanya lanjutan:</div>
+      ${questions.map((q, i) => `
+        <button class="fu-btn" data-q="${q.replace(/"/g,'&quot;')}" data-idx="${i}">
+          <span class="fu-num">${i+1}</span>
+          <span class="fu-text">${q}</span>
+          <span class="fu-arrow">›</span>
+        </button>
+      `).join('')}`;
+    msgsEl.appendChild(container);
+    scroll();
+    container.querySelectorAll('.fu-btn').forEach((btn, idx) => {
+      btn.addEventListener('click', e => { e.preventDefault(); onClickFn(idx, btn.getAttribute('data-q'), container); });
+    });
+    return container;
+  }
+
+  function showDemoToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'demo-toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2200);
+  }
+
+  function animateWorkflowTurn(steps, idSuffix, highlightFn) {
+    turnCount++;
+    wfCount.textContent = turnCount;
+    turnCountEl.textContent = turnCount;
+    const empty = wfBody.querySelector('.mp-empty');
+    if (empty) empty.remove();
+    const turn = document.createElement('div');
+    turn.className = 'wf-turn';
+    const stepsId = `wf-steps-${idSuffix}-${turnCount}`;
+    turn.innerHTML = `<div class="wf-turn-num">Turn ${turnCount} · ${now()}</div><div class="wf-steps" id="${stepsId}"></div>`;
+    wfBody.insertBefore(turn, wfBody.firstChild);
+    return { stepsEl: document.getElementById(stepsId) };
+  }
+
+  async function animateSteps(stepsEl, steps, highlightFn, delayMs) {
+    for (let i = 0; i < steps.length; i++) {
+      const s = steps[i];
+      const stepEl = document.createElement('div');
+      stepEl.className = 'wf-step active';
+      const color = highlightFn ? highlightFn(s.label) : '';
+      stepEl.innerHTML = `
+        <span class="step-dot"${color ? ` style="background:${color}"` : ''}></span>
+        <span class="step-label"${color ? ` style="color:${color};font-weight:600"` : ''}>${s.label}</span>
+        <span class="step-ms">${s.ms}ms</span>`;
+      stepsEl.appendChild(stepEl);
+      await new Promise(r => setTimeout(r, delayMs || 260));
+      stepEl.classList.remove('active');
+      stepEl.classList.add('done');
+    }
+  }
+
+  function setMemoryPanel(userMem, sessionMem) {
+    Object.assign(userMemory, userMem);
+    sessionMemory.length = 0;
+    sessionMem.forEach(m => sessionMemory.push(m));
+    renderUserMemory();
+    renderSessionMemory();
+  }
+
+  function hideWelcomeAndQP() {
+    if (welcomeEl) welcomeEl.style.display = 'none';
+    qpContainer.style.display = 'none';
+  }
+
+  // ══════════════════════════════════════════════════════
+  // SCENARIO: tom_lembong
+  // ══════════════════════════════════════════════════════
+  const TOM_ANSWER = `Tom Lembong adalah mantan Menteri Perdagangan di era Jokowi, menjabat 2015–2016. Ia dikenal sebagai salah satu tokoh ekonom reformis — tipe pejabat yang sering bicara soal keterbukaan pasar dan investasi.
+
+November 2024, ia ditetapkan sebagai tersangka oleh Kejaksaan Agung. Tuduhannya: korupsi terkait kebijakan impor gula saat ia menjabat.
+
+Intinya begini: Saat Tom jadi menteri, pemerintah mengizinkan impor raw sugar — gula mentah yang kemudian diolah swasta. Kejaksaan menilai kebijakan ini merugikan negara dan menguntungkan pihak swasta tertentu. Tom dianggap bertanggung jawab karena ia yang tanda tangan kebijakannya.
+
+Yang bikin kasus ini ramai: banyak yang mempertanyakan apakah ini benar-benar korupsi, atau hanya sebuah keputusan kebijakan yang diadili secara pidana.`;
+
+  const TOM_USER_MEMORY = {
+    user_interest: ['Kasus Tom Lembong', 'Korupsi', 'Kebijakan publik'],
+    preferred_verticals: ['detikNews', 'detikFinance'],
+    archetype: 'Pembaca berita kritis yang ingin memahami konteks kebijakan publik dan kasus hukum nasional',
+    contexts: { news_context: 'Mengikuti perkembangan kasus hukum nasional', finance_context: 'Tertarik isu kebijakan ekonomi/perdagangan', confidence: '0.87 → proceeds normally' }
+  };
+  const TOM_SESSION_MEMORY = [
+    { key: 'Intent', val: 'Definition + Vertical query hybrid (class 5 + class 1)', badge: null },
+    { key: 'Entitas', val: '<strong>Tom Lembong</strong> (person)', badge: 'person', badgeColor: '#818cf8' },
+    { key: 'Partition', val: 'Baru dibuka — topic: <strong>"Kasus Tom Lembong"</strong>', badge: 'new', badgeColor: '#34d399' },
+    { key: 'Mode', val: 'Explanatory depth — foundation first', badge: 'depth', badgeColor: '#e8192c' }
+  ];
+  const TOM_WORKFLOW_STEPS = [
+    { label: 'Classify intent (hybrid)', ms: 142 }, { label: 'Extract entities: 2 found', ms: 218 },
+    { label: 'Search active partition', ms: 95 }, { label: 'Open new partition', ms: 168 },
+    { label: 'Init progress log', ms: 76 }, { label: 'Score confidence: 0.87', ms: 201 },
+    { label: 'Select mode: Explanatory', ms: 134 }, { label: 'Generate foundation answer', ms: 612 }
+  ];
+  const TOM_T2_USER_MEMORY = {
+    user_interest: ['Kasus Tom Lembong', 'Korupsi', 'Kebijakan publik', 'Hukum pidana (mens rea)'],
+    preferred_verticals: ['detikNews', 'detikFinance'],
+    archetype: 'Pembaca berita kritis yang tertarik pada kerangka hukum di balik kebijakan publik',
+    contexts: { news_context: 'Mengikuti kasus Tom Lembong', legal_context: 'Sedang mempelajari konsep mens rea', confidence: '0.87 → proceeds normally' }
+  };
+  const TOM_T2_WORKFLOW = [
+    { label: 'Classify intent: Definition (class 5)', ms: 118 }, { label: 'Extract entity: kebijakan vs korupsi', ms: 154 },
+    { label: 'Search detikcom corpus → no specific match', ms: 287 }, { label: 'Router decision: bypass_retrieval = true', ms: 89 },
+    { label: 'Link concept to active partition', ms: 72 }, { label: 'Switch to LLM knowledge mode', ms: 95 },
+    { label: 'Flag answer: explanatory, non-article', ms: 64 }, { label: 'Generate conceptual explanation', ms: 548 }
+  ];
+  const TOM_T2_ANSWER = `Ini pertanyaan yang bagus — dan inilah yang jadi perdebatan utama di kasus Tom Lembong.
+
+**Salah kebijakan** artinya seorang pejabat membuat keputusan yang ternyata keliru — hasilnya buruk, merugikan, atau tidak efektif. Tapi itu bukan kejahatan. Pejabat boleh salah ambil keputusan selama tidak ada niat jahat dan tidak ada keuntungan pribadi yang dicari.
+
+**Korupsi** butuh lebih dari sekadar keputusan yang salah. Hukum pidana mensyaratkan adanya **mens rea** — niat jahat. Artinya, jaksa harus buktikan bahwa Tom tahu kebijakannya akan mengalir ke keuntungan pihak tertentu, dan ia sengaja membiarkan atau memfasilitasi itu.
+
+Itulah kenapa banyak ekonom dan pengamat hukum bersuara: mereka khawatir kalau kasus ini menang, pejabat di masa depan akan takut ambil keputusan kebijakan yang berani — karena keputusan itu bisa dikriminalisasi belakangan.`;
+
+  async function runTomScenario() {
+    const userQ = sessionStorage.getItem('detik_ai_first_query') || 'Siapa Tom Lembong dan kenapa ia jadi tersangka?';
+    sessionStorage.removeItem('detik_ai_first_query');
+    hideWelcomeAndQP();
+    setMemoryPanel(TOM_USER_MEMORY, TOM_SESSION_MEMORY);
+    addUserMsg(userQ);
+    addTyping();
+    const { stepsEl } = animateWorkflowTurn(TOM_WORKFLOW_STEPS, 'tom');
+    await animateSteps(stepsEl, TOM_WORKFLOW_STEPS, null, 280);
+    removeTyping();
+    addBotMsg(formatReply(TOM_ANSWER), ['detikNews', 'Kejaksaan Agung', 'Profil Tokoh']);
+    totalTokens = Math.floor(TOM_ANSWER.length / 4) + 80;
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${(totalTokens / 1024) * 100}%`;
+    await new Promise(r => setTimeout(r, 400));
+    makeFollowUpsContainer(
+      ['Apa bedanya salah kebijakan dan korupsi?', 'Kenapa kasus ini muncul sekarang?', 'Apa yang terjadi di persidangan sejauh ini?'],
+      (idx, q, container) => {
+        if (idx === 0) { container.remove(); runTomTurn2(q); }
+        else showDemoToast('Demo terkunci — hanya pertanyaan ini yang aktif di demo');
+      }
+    );
+  }
+
+  async function runTomTurn2(userQ) {
+    Object.assign(userMemory, TOM_T2_USER_MEMORY);
+    sessionMemory.push(
+      { key: 'Intent', val: 'Definition (class 5) — pertanyaan konseptual', badge: 'class 5', badgeColor: '#8b5cf6' },
+      { key: 'Router', val: '<strong>bypass_retrieval → true</strong>', badge: 'bypass', badgeColor: '#f59e0b' },
+      { key: 'Konsep', val: 'Perbedaan salah kebijakan vs korupsi (mens rea)', badge: 'turn 2', badgeColor: '#8b5cf6' }
+    );
+    renderUserMemory(); renderSessionMemory();
+    addUserMsg(userQ); addTyping();
+    const { stepsEl } = animateWorkflowTurn(TOM_T2_WORKFLOW, 'tom2');
+    await animateSteps(stepsEl, TOM_T2_WORKFLOW, l => /bypass_retrieval/.test(l) ? '#f59e0b' : '', 260);
+    removeTyping();
+    addBotMsg(formatReply(TOM_T2_ANSWER), []);
+    totalTokens += Math.floor(TOM_T2_ANSWER.length / 4) + 60;
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${Math.min(100,(totalTokens/1024)*100)}%`;
+    await new Promise(r => setTimeout(r, 400));
+    makeFollowUpsContainer(
+      ['Apakah jaksa sudah buktikan mens rea di sidang?', 'Siapa saja yang membela Tom Lembong?', 'Kalau Tom bebas, apa artinya?'],
+      () => showDemoToast('Demo berakhir di sini — hanya 2 turn yang dijalankan')
+    );
+  }
+
+  // ══════════════════════════════════════════════════════
+  // SCENARIO: campak_outbreak
+  // ══════════════════════════════════════════════════════
+  const CO_ANSWER = `Berdasarkan laporan detikNews, lonjakan kasus campak pada 2026 terjadi di **11 provinsi** dengan konsentrasi tertinggi di **Jawa Barat, Jawa Timur, dan NTT**.
+
+Kemenkes mencatat lebih dari **3.400 kasus** sejak Januari — naik signifikan dibanding periode yang sama tahun lalu. Mayoritas kasus menyerang anak di bawah 5 tahun yang belum mendapat vaksin MMR lengkap.
+
+Lonjakan ini dikaitkan dengan penurunan cakupan vaksinasi pasca-pandemi COVID-19, di mana banyak jadwal imunisasi rutin terlewat.`;
+
+  const CO_USER_MEMORY = {
+    user_interest: ['Wabah Campak 2026', 'Vaksinasi', 'Berita kesehatan'],
+    preferred_verticals: ['detikNews'],
+    archetype: 'Pembaca berita yang waspada terhadap isu kesehatan publik dan wabah penyakit menular',
+    contexts: { news_context: 'Mengikuti perkembangan wabah campak 2026', health_context: 'Tertarik isu cakupan vaksinasi pasca-pandemi', confidence: '0.89 → proceeds normally' }
+  };
+  const CO_SESSION_MEMORY = [
+    { key: 'Intent', val: 'Vertical query (class 1) → <strong>NewsBot</strong>', badge: 'class 1', badgeColor: '#06b6d4' },
+    { key: 'Entitas', val: '<strong>campak</strong> (topic)', badge: 'topic', badgeColor: '#818cf8' },
+    { key: 'Partition', val: 'Baru dibuka — topic: <strong>"Wabah Campak 2026"</strong>', badge: 'new', badgeColor: '#34d399' },
+    { key: 'Retrieval', val: 'detikNews articles on campak outbreak', badge: 'active', badgeColor: '#10b981' }
+  ];
+  const CO_WORKFLOW_STEPS = [
+    { label: 'Classify intent: Vertical query (class 1)', ms: 124 }, { label: 'Route to NewsBot vertical', ms: 88 },
+    { label: 'Extract entities: 3 found', ms: 196 }, { label: 'Search active partition', ms: 92 },
+    { label: 'Open new partition: Wabah Campak 2026', ms: 154 }, { label: 'Retrieve detikNews corpus (campak)', ms: 348 },
+    { label: 'Score confidence: 0.89', ms: 178 }, { label: 'Generate news-grounded answer', ms: 584 }
+  ];
+  const CO_T2_USER_MEMORY = {
+    user_interest: ['Wabah Campak 2026', 'Vaksin MMR anak', 'Keamanan anak balita'],
+    preferred_verticals: ['detikNews', 'detikHealth'],
+    archetype: 'Orang tua dengan anak balita yang sedang mempertimbangkan vaksinasi MMR',
+    contexts: { health_context: 'User: Rama. Anak: Kirana, 2 tahun. Vaksin MMR belum lengkap', confidence: '0.84 → proceeds normally' }
+  };
+  const CO_T2_SESSION = [
+    { key: 'Intent', val: 'Vertical query (class 1) — entity signals shift', badge: 'class 1', badgeColor: '#06b6d4' },
+    { key: 'Vertical signal', val: '"vaksin", "anak", "aman" → <strong>HealthBot</strong>', badge: 'pivot', badgeColor: '#f59e0b' },
+    { key: 'Router', val: '<strong>cross-vertical pivot detected</strong>', badge: 'pivot', badgeColor: '#f59e0b' },
+    { key: 'New vertical', val: '<strong>HealthBot</strong>', badge: 'handoff', badgeColor: '#10b981' }
+  ];
+  const CO_T2_WORKFLOW = [
+    { label: 'Classify intent: Vertical query (class 1)', ms: 121 }, { label: 'Extract entities: anak, 2 tahun, belum vaksin, aman', ms: 196 },
+    { label: 'Detect entity-signal shift', ms: 84 }, { label: 'Cross-vertical pivot detected: NewsBot → HealthBot', ms: 142 },
+    { label: 'Open sub-partition under "Wabah Campak 2026"', ms: 118 }, { label: 'Handoff to HealthBot vertical', ms: 96 },
+    { label: 'Personalize from user memory (Rama, Kirana)', ms: 112 }, { label: 'Generate health-grounded answer', ms: 598 }
+  ];
+  const CO_T2_ANSWER = `Pertanyaan yang penting, **Rama**. Anak usia 2 tahun yang belum mendapat vaksin MMR lengkap masuk dalam kelompok rentan dalam wabah ini.
+
+**Yang perlu kamu tahu:** Campak sangat menular — jauh lebih menular dari flu. Satu orang yang terinfeksi bisa menularkan ke 12–18 orang yang belum kebal. Untuk anak di bawah 5 tahun, komplikasi bisa serius: pneumonia, infeksi telinga, bahkan ensefalitis.
+
+**Status vaksin Kirana:** Vaksin MMR pertama seharusnya diberikan di usia 12–15 bulan. Jika Kirana sudah lewat usia itu dan belum vaksin, ini perlu segera ditindaklanjuti — bukan karena panik, tapi karena wabah aktif sedang berjalan.
+
+**Langkah konkret:** Hubungi puskesmas atau dokter anak terdekat untuk jadwal vaksin MMR secepatnya. Sementara itu, hindari kerumunan dan perhatikan gejala awal: demam tinggi, ruam, mata merah, dan bintik putih di dalam mulut.`;
+
+  const CO_T3_SESSION = [
+    { key: 'Intent', val: 'Navigation + Vertical query (class 12 + class 1)', badge: 'class 12+1', badgeColor: '#06b6d4' },
+    { key: 'Vertical', val: '<strong>HealthBot</strong> handles — Action Layer surfaces location guidance', badge: 'action', badgeColor: '#10b981' },
+    { key: 'Partition', val: 'Sub-partition HealthBot tetap aktif', badge: 'continued', badgeColor: '#64748b' }
+  ];
+  const CO_T3_USER_MEMORY = {
+    user_interest: ['Wabah Campak 2026', 'Vaksin MMR anak', 'Layanan kesehatan terdekat'],
+    preferred_verticals: ['detikNews', 'detikHealth'],
+    archetype: 'Orang tua yang aktif mencari akses layanan kesehatan untuk vaksinasi anak',
+    contexts: { health_context: 'User: Rama. Anak: Kirana, 2 tahun. Sedang mencari lokasi vaksinasi', confidence: '0.91 → high' }
+  };
+  const CO_T3_WORKFLOW = [
+    { label: 'Classify intent: Navigation + Vertical (class 12 + 1)', ms: 138 }, { label: 'Extract entities: vaksin MMR, terdekat', ms: 162 },
+    { label: 'Stay in HealthBot vertical', ms: 78 }, { label: 'Engage Action Layer: location guidance', ms: 124 },
+    { label: 'Retrieve detikHealth: vaccination points', ms: 312 }, { label: 'Personalize for Kirana (usia 2 thn)', ms: 96 },
+    { label: 'Score confidence: 0.91', ms: 145 }, { label: 'Generate actionable answer', ms: 612 }
+  ];
+  const CO_T3_ANSWER = `Untuk vaksin MMR, **Kirana** bisa dibawa ke:
+
+**Puskesmas terdekat** — gratis, tersedia di seluruh Indonesia, tidak perlu appointment. Bawa buku KIA untuk pencatatan.
+
+**Posyandu** — jadwal bulanan, cocok untuk anak balita. Tanya ke kader posyandu di kelurahanmu untuk jadwal terdekat.
+
+**Dokter anak / klinik swasta** — bisa lebih fleksibel soal jadwal, tapi berbayar. Kisaran Rp 150–300 ribu per dosis.
+
+Mengingat wabah sedang aktif, **puskesmas adalah pilihan tercepat** — biasanya tidak perlu antre panjang untuk imunisasi anak.
+
+Bawa: buku KIA, kartu identitas orang tua, dan pastikan Kirana dalam kondisi sehat saat vaksinasi.`;
+
+  function showHealthBotPill() {
+    const pill = document.createElement('div');
+    pill.style.cssText = 'align-self:flex-start;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#06b6d4,#10b981);color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px;letter-spacing:0.3px;text-transform:uppercase;margin:6px 0 -2px 44px;box-shadow:0 2px 6px rgba(16,185,129,0.35);';
+    pill.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block;"></span> beralih ke HealthBot';
+    msgsEl.appendChild(pill); scroll();
+  }
+
+  async function runCampakOutbreakTurn2(userQ) {
+    setMemoryPanel(CO_T2_USER_MEMORY, CO_T2_SESSION);
+    addUserMsg(userQ); addTyping();
+    const { stepsEl } = animateWorkflowTurn(CO_T2_WORKFLOW, 'co2');
+    await animateSteps(stepsEl, CO_T2_WORKFLOW, l => /pivot|HealthBot|Handoff/i.test(l) ? '#10b981' : '', 240);
+    removeTyping();
+    showHealthBotPill();
+    await new Promise(r => setTimeout(r, 280));
+    addBotMsg(formatReply(CO_T2_ANSWER), ['HealthBot', 'Kemenkes RI', 'IDAI Imunisasi']);
+    totalTokens += Math.floor(CO_T2_ANSWER.length / 4) + 80;
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${Math.min(100,(totalTokens/1024)*100)}%`;
+    await new Promise(r => setTimeout(r, 400));
+    makeFollowUpsContainer(
+      ['Di mana bisa vaksin MMR terdekat sekarang?', 'Apa gejala awal campak yang harus diwaspadai?', 'Kalau sudah kena campak, apa yang harus dilakukan?'],
+      (idx, q, container) => {
+        if (idx === 0) { container.remove(); runCampakOutbreakTurn3(q); }
+        else showDemoToast('Demo berakhir di sini — hanya 3 turn yang dijalankan');
+      }
+    );
+  }
+
+  async function runCampakOutbreakTurn3(userQ) {
+    setMemoryPanel(CO_T3_USER_MEMORY, CO_T3_SESSION);
+    addUserMsg(userQ); addTyping();
+    const { stepsEl } = animateWorkflowTurn(CO_T3_WORKFLOW, 'co3');
+    await animateSteps(stepsEl, CO_T3_WORKFLOW, l => /Action Layer|Navigation|location/i.test(l) ? '#06b6d4' : '', 250);
+    removeTyping();
+    addBotMsg(formatReply(CO_T3_ANSWER), ['HealthBot · Action Layer', 'detikHealth', 'Puskesmas / Posyandu']);
+    totalTokens += Math.floor(CO_T3_ANSWER.length / 4) + 80;
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${Math.min(100,(totalTokens/1024)*100)}%`;
+  }
+
+  async function runCampakOutbreakScenario() {
+    const userQ = sessionStorage.getItem('detik_ai_first_query') || 'Wabah campak 2026: seberapa luas penyebarannya?';
+    sessionStorage.removeItem('detik_ai_first_query');
+    hideWelcomeAndQP();
+    setMemoryPanel(CO_USER_MEMORY, CO_SESSION_MEMORY);
+    addUserMsg(userQ); addTyping();
+    const { stepsEl } = animateWorkflowTurn(CO_WORKFLOW_STEPS, 'co');
+    await animateSteps(stepsEl, CO_WORKFLOW_STEPS, null, 280);
+    removeTyping();
+    addBotMsg(formatReply(CO_ANSWER), ['detikNews', 'Kemenkes RI', 'Laporan Imunisasi']);
+    totalTokens = Math.floor(CO_ANSWER.length / 4) + 80;
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${(totalTokens/1024)*100}%`;
+    await new Promise(r => setTimeout(r, 400));
+    makeFollowUpsContainer(
+      ['Kenapa cakupan vaksinasi bisa turun separah ini?', 'Anak saya 2 tahun, belum vaksin lengkap. Dia aman nggak?', 'Apakah campak berbahaya untuk anak yang belum divaksin?'],
+      (idx, q, container) => {
+        if (idx === 1) {
+          container.remove();
+          isTyping = true; sendBtn.disabled = true;
+          runCampakOutbreakTurn2(q).then(() => { isTyping = false; sendBtn.disabled = inputEl.value.trim().length === 0; });
+        } else showDemoToast('Demo berakhir di sini — hanya 1 turn yang dijalankan');
+      }
+    );
+  }
+
+  // ══════════════════════════════════════════════════════
+  // SCENARIO: campak_bahaya
+  // ══════════════════════════════════════════════════════
+  const BAHAYA_ANSWER = `Campak adalah salah satu penyakit paling menular di dunia. Satu orang yang terinfeksi bisa menularkan ke 12–18 orang yang belum kebal — jauh lebih tinggi dari flu atau COVID-19.
+
+**Siapa yang paling berisiko:** Anak di bawah 5 tahun yang belum mendapat vaksin MMR adalah kelompok paling rentan. Komplikasi serius bisa terjadi — pneumonia, infeksi telinga, bahkan ensefalitis pada kasus berat.
+
+**Kenapa sekarang lebih berbahaya:** Wabah 2026 ini terjadi karena penurunan cakupan vaksinasi pasca-COVID. Banyak jadwal imunisasi anak yang terlewat selama 2020–2022, dan celah itu kini menjadi titik lemah di populasi.
+
+**Apa yang perlu dilakukan:** Pastikan anak sudah mendapat vaksin MMR sesuai jadwal — dosis pertama usia 12–15 bulan, dosis kedua usia 18 bulan. Jika belum, segera ke puskesmas terdekat.`;
+
+  const BAHAYA_WORKFLOW_STEPS = [
+    { label: 'Classify intent: Vertical query (health signal)', ms: 112 }, { label: 'Extract entities: "campak" (topic)', ms: 89 },
+    { label: 'Route → HealthBot (strong health signal)', ms: 156 }, { label: 'Score confidence: 0.83', ms: 134 },
+    { label: 'Retrieve detikHealth corpus', ms: 298 }, { label: 'Generate health-grounded answer', ms: 521 }
+  ];
+  const BAHAYA_INITIAL_SESSION = [
+    { key: 'Class', val: 'Vertical query → <strong>HealthBot</strong>', badge: 'strong health signal', badgeColor: '#10b981' },
+    { key: 'Entities', val: '"<strong>campak</strong>" (topic)', badge: 'topic', badgeColor: '#818cf8' },
+    { key: 'Confidence', val: '0.83', badge: 'high', badgeColor: '#34d399' }
+  ];
+  const BAHAYA_FINAL_SESSION = [
+    { key: 'Topik', val: '"<strong>transmisi dan tingkat penularan campak</strong>"', badge: 'introduced', badgeColor: '#818cf8' },
+    { key: 'Topik', val: '"<strong>kelompok rentan: anak di bawah 5 tahun</strong>"', badge: 'introduced', badgeColor: '#818cf8' },
+    { key: 'Topik', val: '"<strong>komplikasi serius campak</strong>"', badge: 'introduced', badgeColor: '#818cf8' },
+    { key: 'Topik', val: '"<strong>konteks wabah 2026: gap vaksinasi</strong>"', badge: 'introduced', badgeColor: '#818cf8' },
+    { key: 'Topik', val: '"<strong>jadwal vaksin MMR</strong>"', badge: 'introduced', badgeColor: '#818cf8' }
+  ];
+  const BAHAYA_FINAL_USER_MEMORY = { user_interest: [], preferred_verticals: ['detikNews','detikInet','detikHealth'], archetype: 'concerned_parent', contexts: {} };
+
+  async function runBahayaScenario() {
+    const userQ = sessionStorage.getItem('detik_ai_first_query') || 'Campak ini berbahaya nggak?';
+    sessionStorage.removeItem('detik_ai_first_query');
+    hideWelcomeAndQP();
+    sessionMemory.length = 0;
+    BAHAYA_INITIAL_SESSION.forEach(m => sessionMemory.push(m));
+    renderUserMemory(); renderSessionMemory();
+    wfBody.innerHTML = '<div class="mp-empty" style="font-style:normal;color:#444;">Progress log</div>';
+    wfCount.textContent = '0';
+    addUserMsg(userQ); addTyping();
+    const { stepsEl } = animateWorkflowTurn(BAHAYA_WORKFLOW_STEPS, 'bahaya');
+    await animateSteps(stepsEl, BAHAYA_WORKFLOW_STEPS, l => /HealthBot|Route/i.test(l) ? '#10b981' : '', 260);
+    removeTyping();
+    addBotMsg(formatReply(BAHAYA_ANSWER), ['HealthBot', 'detikHealth', 'Kemenkes RI', 'IDAI']);
+    Object.assign(userMemory, BAHAYA_FINAL_USER_MEMORY);
+    sessionMemory.length = 0;
+    BAHAYA_FINAL_SESSION.forEach(m => sessionMemory.push(m));
+    renderUserMemory(); renderSessionMemory();
+    totalTokens = Math.floor(BAHAYA_ANSWER.length / 4) + 80;
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${(totalTokens/1024)*100}%`;
+  }
+
+  // ══════════════════════════════════════════════════════
+  // SCENARIO: campak_depth
+  // ══════════════════════════════════════════════════════
+  const DEPTH_ANSWER = `Situasinya memburuk sejak Senin. Berdasarkan update detikHealth hari ini:
+
+**Yang baru sejak kamu terakhir baca:** Kasus kini tersebar di **14 provinsi** — naik dari 11. **DKI Jakarta** masuk dalam daftar terdampak mulai kemarin, yang sebelumnya belum termasuk zona aktif.
+
+**Respons Kemenkes terbaru:** Kemenkes mengumumkan program vaksinasi kejar *(catch-up vaccination)* di 6 provinsi prioritas mulai minggu ini. Program ini gratis dan tidak memerlukan appointment — cukup datang ke puskesmas dengan buku KIA.
+
+**Yang relevan untuk kamu:** Kalau Kirana belum divaksin sejak Senin, program catch-up ini adalah jalur tercepat. Puskesmas di Tangerang termasuk dalam zona program ini.`;
+
+  const DEPTH_PROGRESS_LOG_BEFORE = [
+    '"transmisi dan tingkat penularan campak"', '"kelompok rentan: anak di bawah 5 tahun"',
+    '"komplikasi serius campak"', '"konteks wabah 2026: gap vaksinasi"', '"jadwal vaksin MMR"'
+  ];
+  const DEPTH_PROGRESS_LOG_AFTER = [
+    { text: '"transmisi dan tingkat penularan campak"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"kelompok rentan: anak di bawah 5 tahun"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"komplikasi serius campak"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"konteks wabah 2026: gap vaksinasi"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"jadwal vaksin MMR"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"perkembangan kasus: 14 provinsi"', badge: 'introduced', color: '#818cf8' },
+    { text: '"program catch-up vaccination Kemenkes"', badge: 'introduced', color: '#818cf8' },
+    { text: '"DKI Jakarta masuk zona aktif"', badge: 'introduced', color: '#818cf8' }
+  ];
+  const DEPTH_WORKFLOW_STEPS = [
+    { label: 'Classify intent: Depth query (class 3)', ms: 98 }, { label: 'Detect continuation: campak partition active', ms: 112 },
+    { label: 'Extract entities: "campak", "perkembangan baru"', ms: 89 }, { label: 'Progress log check: 5/5 concepts introduced', ms: 134 },
+    { label: 'Score confidence: 0.86', ms: 78 }, { label: 'Retrieve latest updates (detikHealth)', ms: 312 },
+    { label: 'Personalize from user memory (Kirana, Tangerang)', ms: 156 }, { label: 'Generate depth-continuation answer', ms: 589 }
+  ];
+  const DEPTH_INITIAL_SESSION = [
+    { key: 'Class', val: 'Depth <strong>(class 3)</strong> — continuation of active topic', badge: 'class 3', badgeColor: '#06b6d4' },
+    { key: 'Session', val: 'campak partition loaded', badge: 'loaded', badgeColor: '#34d399' },
+    { key: 'Confidence', val: '0.86', badge: 'high', badgeColor: '#34d399' }
+  ];
+  const DEPTH_FINAL_SESSION = [
+    { key: 'Topik', val: '"<strong>transmisi dan tingkat penularan campak</strong>"', badge: 'deep_dived', badgeColor: '#06b6d4' },
+    { key: 'Topik', val: '"<strong>perkembangan kasus: 14 provinsi</strong>"', badge: 'introduced', badgeColor: '#818cf8' },
+    { key: 'Topik', val: '"<strong>program catch-up vaccination Kemenkes</strong>"', badge: 'introduced', badgeColor: '#818cf8' },
+    { key: 'Topik', val: '"<strong>DKI Jakarta masuk zona aktif</strong>"', badge: 'introduced', badgeColor: '#818cf8' }
+  ];
+  const DEPTH_FINAL_USER_MEMORY = {
+    user_interest: ['Wabah Campak 2026', 'Vaksin MMR anak', 'Imunisasi rutin'],
+    preferred_verticals: ['detikNews', 'detikInet', 'detikHealth'],
+    archetype: 'concerned_parent',
+    contexts: { health_context: JSON.stringify({ child_age: '~2 tahun', vaccination_status: 'incomplete' }), return_pattern: 'Day 1 + Day 3' }
+  };
+
+  function buildProgressLogHtml(items, done) {
+    return items.map(item => {
+      const text = done ? item.text : item;
+      const badge = done ? item.badge : 'introduced';
+      const color = done ? item.color : '#818cf8';
+      return `<div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid #1a1a24;">
+        <span style="color:#34d399;font-size:11px;flex-shrink:0;margin-top:1px;">${done && badge === 'deep_dived' ? '↑' : '+'}</span>
+        <span style="font-size:10px;color:#aaa;flex:1;line-height:1.45;">${text}</span>
+        <span style="font-size:9px;padding:1px 5px;border-radius:6px;font-weight:700;flex-shrink:0;background:${color}22;color:${color}">${badge}</span>
+      </div>`;
+    }).join('');
+  }
+
+  async function runDepthScenario() {
+    const userQ = sessionStorage.getItem('detik_ai_first_query') || 'Masih bahaya nggak campaknya? Ada perkembangan baru?';
+    sessionStorage.removeItem('detik_ai_first_query');
+    hideWelcomeAndQP();
+    sessionMemory.length = 0;
+    DEPTH_INITIAL_SESSION.forEach(m => sessionMemory.push(m));
+    renderUserMemory(); renderSessionMemory();
+    wfBody.innerHTML = `
+      <div style="background:#16161e;border:1px solid #1e1e2e;border-radius:8px;overflow:hidden;margin-bottom:4px;">
+        <div style="display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid #1e1e2e;">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#34d399;flex:1;">Progress Log</span>
+          <span style="font-size:9px;padding:1px 6px;border-radius:8px;background:rgba(52,211,153,0.12);color:#34d399;font-weight:700;">5 loaded</span>
+        </div>
+        <div style="padding:6px 8px;" id="depth-progress-log">${buildProgressLogHtml(DEPTH_PROGRESS_LOG_BEFORE, false)}</div>
+      </div>`;
+    wfCount.textContent = '0';
+    addUserMsg(userQ); addTyping();
+    const { stepsEl } = animateWorkflowTurn(DEPTH_WORKFLOW_STEPS, 'depth');
+    await animateSteps(stepsEl, DEPTH_WORKFLOW_STEPS, l => /progress log/i.test(l) ? '#34d399' : /class 3|continuation|partition/i.test(l) ? '#06b6d4' : '', 250);
+    removeTyping();
+    addBotMsg(formatReply(DEPTH_ANSWER), ['HealthBot · depth', 'detikHealth', 'Kemenkes RI', 'IDAI']);
+    Object.assign(userMemory, DEPTH_FINAL_USER_MEMORY);
+    sessionMemory.length = 0;
+    DEPTH_FINAL_SESSION.forEach(m => sessionMemory.push(m));
+    renderUserMemory(); renderSessionMemory();
+    const preLog = document.getElementById('depth-progress-log');
+    if (preLog) preLog.innerHTML = buildProgressLogHtml(DEPTH_PROGRESS_LOG_AFTER, true);
+    totalTokens += Math.floor(DEPTH_ANSWER.length / 4) + 80;
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${Math.min(100,(totalTokens/1024)*100)}%`;
+  }
+
+  // ══════════════════════════════════════════════════════
+  // SCENARIO: campak_resolved
+  // ══════════════════════════════════════════════════════
+  const RESOLVED_ANSWER = `Bagus sekali — itu langkah yang tepat dan cepat.
+
+**Situasi Kirana sekarang:** Dosis pertama MMR memberikan perlindungan sekitar **93%** terhadap campak. Itu sudah signifikan — risiko Kirana turun drastis dibanding minggu lalu.
+
+**Yang perlu kamu tahu tentang dosis kedua:** Perlindungan penuh butuh dosis kedua, yang dijadwalkan di **usia 18 bulan**. Jangan lewatkan ini — dosis kedua mendorong perlindungan ke **97%** dan membangun imunitas jangka panjang.
+
+**Sisa risiko yang realistis:** Selama **2 minggu** setelah vaksinasi, tubuh Kirana masih membangun respons imun. Dalam periode ini, tetap hindari kerumunan besar dan perhatikan gejala awal jika ada paparan. Setelah 2 minggu, proteksinya sudah aktif penuh.
+
+**Wabahnya sendiri:** Kasus masih aktif di 14 provinsi. Tapi dengan dosis pertama, Kirana bukan lagi kelompok paling rentan. Kamu sudah melakukan bagian terpenting.`;
+
+  const RESOLVED_PROGRESS_LOG_LOADED = [
+    { text: '"transmisi dan tingkat penularan campak"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"kelompok rentan: anak di bawah 5 tahun"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"komplikasi serius campak"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"konteks wabah 2026: gap vaksinasi"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"jadwal vaksin MMR"', badge: 'deep_dived', color: '#06b6d4' },
+    { text: '"perkembangan kasus: 14 provinsi"', badge: 'introduced', color: '#818cf8' },
+    { text: '"program catch-up vaccination Kemenkes"', badge: 'introduced', color: '#818cf8' },
+    { text: '"DKI Jakarta masuk zona aktif"', badge: 'introduced', color: '#818cf8' }
+  ];
+  const RESOLVED_PROGRESS_LOG_AFTER = [
+    ...RESOLVED_PROGRESS_LOG_LOADED.map(i => ({ ...i, badge: 'deep_dived', color: '#06b6d4' })),
+    { text: '"efektivitas MMR dosis pertama (93%)"', badge: 'introduced', color: '#818cf8' },
+    { text: '"window imunitas 2 minggu pasca vaksin"', badge: 'introduced', color: '#818cf8' },
+    { text: '"jadwal MMR dosis kedua: usia 18 bulan"', badge: 'introduced', color: '#818cf8' }
+  ];
+  const RESOLVED_WORKFLOW_STEPS = [
+    { label: 'Classify intent: Depth query (class 3) + state change', ms: 103 }, { label: 'Resolve entity: "Kirana" from user profile', ms: 88 },
+    { label: 'Detect contradiction: "sudah vaksin" vs stored "incomplete"', ms: 142 }, { label: 'Trigger profile update: vaccination_status → dose_1_complete', ms: 196 },
+    { label: 'Load progress log: 8 concepts from journey', ms: 112 }, { label: 'Score confidence: 0.91', ms: 78 },
+    { label: 'Retrieve MMR efficacy data (detikHealth)', ms: 267 }, { label: 'Generate reassurance + guidance answer', ms: 534 }
+  ];
+  const RESOLVED_INITIAL_SESSION = [
+    { key: 'Class', val: 'Depth <strong>(class 3)</strong> — continuation + state change', badge: 'class 3', badgeColor: '#06b6d4' },
+    { key: 'Entities', val: '"<strong>sudah vaksin</strong>" contradicts stored <strong>incomplete</strong>', badge: 'profile update ↑', badgeColor: '#f59e0b' },
+    { key: 'Confidence', val: '0.91', badge: 'high', badgeColor: '#34d399' }
+  ];
+  const RESOLVED_FINAL_SESSION = [
+    { key: 'Status', val: 'vaccination_status → <strong>dose_1_complete</strong>', badge: 'resolved ✓', badgeColor: '#34d399' },
+    { key: 'Topik', val: '"<strong>efektivitas MMR dosis pertama (93%)</strong>"', badge: 'introduced', badgeColor: '#818cf8' },
+    { key: 'Archetype', val: 'concerned_parent → <strong>informed_parent</strong>', badge: 'transitioning', badgeColor: '#10b981' }
+  ];
+  const RESOLVED_FINAL_USER_MEMORY = {
+    user_interest: ['Wabah Campak 2026', 'Vaksin MMR anak', 'Efektivitas vaksinasi'],
+    preferred_verticals: ['detikNews', 'detikInet', 'detikHealth'],
+    archetype: 'informed_parent',
+    contexts: { health_context: JSON.stringify({ child_age: '~2 tahun', vaccination_status: 'dose_1_complete' }), archetype_transition: 'concerned_parent → informed_parent' }
+  };
+
+  async function runResolvedScenario() {
+    const userQ = sessionStorage.getItem('detik_ai_first_query') || 'Kirana sudah vaksin kemarin. Masih perlu khawatir?';
+    sessionStorage.removeItem('detik_ai_first_query');
+    hideWelcomeAndQP();
+    sessionMemory.length = 0;
+    RESOLVED_INITIAL_SESSION.forEach(m => sessionMemory.push(m));
+    renderUserMemory(); renderSessionMemory();
+    wfBody.innerHTML = `
+      <div style="background:#16161e;border:1px solid #1e1e2e;border-radius:8px;overflow:hidden;margin-bottom:4px;">
+        <div style="display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid #1e1e2e;">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#34d399;flex:1;">Progress Log</span>
+          <span id="plog-count-resolved" style="font-size:9px;padding:1px 6px;border-radius:8px;background:rgba(52,211,153,0.12);color:#34d399;font-weight:700;">8 loaded</span>
+        </div>
+        <div style="padding:6px 8px;" id="progress-log-resolved">${buildProgressLogHtml(RESOLVED_PROGRESS_LOG_LOADED, true)}</div>
+      </div>`;
+    wfCount.textContent = '0';
+    addUserMsg(userQ); addTyping();
+    await new Promise(r => setTimeout(r, 300));
+    const pill = document.createElement('div');
+    pill.style.cssText = 'align-self:flex-start;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#f59e0b,#10b981);color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px;letter-spacing:0.3px;text-transform:uppercase;margin:4px 0 -2px 44px;box-shadow:0 2px 6px rgba(245,158,11,0.35);';
+    pill.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block;"></span> profile update triggered';
+    msgsEl.appendChild(pill); scroll();
+    const { stepsEl } = animateWorkflowTurn(RESOLVED_WORKFLOW_STEPS, 'resolved');
+    await animateSteps(stepsEl, RESOLVED_WORKFLOW_STEPS, l => /contradiction|profile update/i.test(l) ? '#f59e0b' : /resolve entity/i.test(l) ? '#10b981' : /class 3|continuation/i.test(l) ? '#06b6d4' : '', 260);
+    removeTyping();
+    addBotMsg(formatReply(RESOLVED_ANSWER), ['HealthBot · resolved', 'detikHealth', 'IDAI Imunisasi', 'Kemenkes RI']);
+    Object.assign(userMemory, RESOLVED_FINAL_USER_MEMORY);
+    sessionMemory.length = 0;
+    RESOLVED_FINAL_SESSION.forEach(m => sessionMemory.push(m));
+    renderUserMemory(); renderSessionMemory();
+    const plogEl = document.getElementById('progress-log-resolved');
+    const plogCount = document.getElementById('plog-count-resolved');
+    if (plogEl) plogEl.innerHTML = buildProgressLogHtml(RESOLVED_PROGRESS_LOG_AFTER, true);
+    if (plogCount) plogCount.textContent = '11 entries';
+    totalTokens += Math.floor(RESOLVED_ANSWER.length / 4) + 80;
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${Math.min(100,(totalTokens/1024)*100)}%`;
+  }
+
+  // ══════════════════════════════════════════════════════
+  // SCENARIO: cicilan_kpr
+  // ══════════════════════════════════════════════════════
+  const KPR_QUESTION = 'Kapan waktu terbaik untuk take over KPR?';
+  const KPR_SESSION_MEMORY = [
+    { key: 'Intent', val: 'Vertical query (class 1) → <strong>PropertiBot</strong>', badge: 'class 1', badgeColor: '#10b981' },
+    { key: 'Entitas', val: '"<strong>take over KPR</strong>" (topic)', badge: 'topic', badgeColor: '#818cf8' },
+    { key: 'Partition', val: 'New partition opened: "<strong>Take Over KPR</strong>"', badge: 'new', badgeColor: '#34d399' },
+    { key: 'Conf.', val: '0.86 → proceeds', badge: 'high', badgeColor: '#34d399' }
+  ];
+  const KPR_WORKFLOW_STEPS = [
+    { label: 'Query received → intent router', ms: 88 }, { label: 'Classify intent: Vertical query (class 1)', ms: 112 },
+    { label: 'Route to PropertiBot vertical', ms: 76 }, { label: 'Extract entities: take over KPR, waktu terbaik', ms: 184 },
+    { label: 'Open new partition: "Take Over KPR"', ms: 134 }, { label: 'Retrieve detikProperti guidance content', ms: 362 },
+    { label: 'Score confidence: 0.86', ms: 98 }, { label: 'Generate property-grounded answer', ms: 541 }
+  ];
+  const KPR_FINAL_USER_MEMORY = {
+    user_interest: ['Take Over KPR', 'Refinancing', 'Perencanaan keuangan properti'],
+    preferred_verticals: ['detikNews', 'detikProperti'],
+    archetype: 'property_researcher',
+    contexts: { property_interest: 'Take over KPR — timing & conditions' }
+  };
+  const KPR_ANSWER = `<p>Take over KPR paling <em>worth it</em> dilakukan ketika <strong>tiga kondisi ini terpenuhi secara bersamaan</strong>:</p>
+<ol>
+  <li><strong>Selisih rate signifikan</strong><br>Idealnya minimal <strong>1–1,5%</strong> antara rate KPR lamamu dan rate terbaik yang ditawarkan bank baru.</li>
+  <li><strong>Sisa tenor masih panjang</strong><br>Take over paling menguntungkan ketika kamu masih punya <strong>10 tahun atau lebih</strong>.</li>
+  <li><strong>Kondisi keuanganmu stabil</strong><br>Bank baru akan mengevaluasi ulang kemampuan finansialmu — penghasilan, DTI, dan rekam jejak cicilan.</li>
+</ol>
+<p><strong>Biaya yang perlu diperhitungkan:</strong> biaya appraisal, biaya notaris, provisi bank baru, dan penalti pelunasan dipercepat dari bank lama.</p>`;
+
+  const KPR_T2_QUESTION = 'Simulasikan buat aku dong. KPR-ku dari 2019, cicilan Rp 4.2 juta per bulan, sisa tenor 16 tahun. Worthit nggak kalau take over sekarang?';
+  const KPR_T2_SESSION_MEMORY = [
+    { key: 'Intent', val: 'Complex multi-vertical (class 3) → <strong>Orchestrator</strong>', badge: 'class 3', badgeColor: '#818cf8' },
+    { key: 'Dispatch', val: '<strong>PropertiBot</strong> · simulate KPR numbers', badge: '1 / 3', badgeColor: '#10b981' },
+    { key: 'Dispatch', val: '<strong>FinanceBot</strong> · current bank rates', badge: '2 / 3', badgeColor: '#f59e0b' },
+    { key: 'Dispatch', val: '<strong>NewsBot</strong> · BI rate direction', badge: '3 / 3', badgeColor: '#06b6d4' },
+    { key: 'Synth.', val: 'Orchestrator merges 3 bot responses', badge: 'done', badgeColor: '#34d399' },
+    { key: 'User ctx', val: 'Doni · 2 anak · cash flow optimization', badge: 'personalized', badgeColor: '#e8192c' }
+  ];
+  const KPR_T2_WORKFLOW_STEPS = [
+    { label: 'Classify: Complex multi-vertical (class 3)', ms: 134 }, { label: 'Orchestrator: dispatch 3 bots in parallel', ms: 88 },
+    { label: 'PropertiBot: simulate KPR numbers', ms: 412 }, { label: 'FinanceBot: fetch current bank rates', ms: 384 },
+    { label: 'NewsBot: retrieve BI rate signal & outlook', ms: 356 }, { label: 'Extract user context: Doni, 2 anak', ms: 112 },
+    { label: 'Orchestrator: merge 3 bot results', ms: 198 }, { label: 'Generate consolidated recommendation', ms: 621 }
+  ];
+  const KPR_T2_FINAL_USER_MEMORY = {
+    user_interest: ['Take Over KPR', 'Refinancing', 'Rate KPR terbaik', 'Timing take over'],
+    preferred_verticals: ['detikFinance', 'detikNews', 'detikProperti'],
+    archetype: 'practical_decision_maker',
+    contexts: { 'property_context.take_over_intent': 'active · KPR 2019 · Rp 4.2jt/bln · sisa 16thn', user_name: 'Doni', family_context: '2 anak · cash flow optimization priority' }
+  };
+  const KPR_T2_ANSWER = `
+<p>Aku sudah simulasikan situasi <strong>Doni</strong>. Ini hasilnya:</p>
+<p><strong>Simulasi Take Over KPR</strong><br><span style="font-size:11px;color:#888;">Sisa pokok estimasi: Rp 380 juta · Sisa tenor: 16 tahun</span></p>
+<table class="sim-table">
+  <thead><tr><th></th><th>Rate sekarang (12.5%)</th><th>Setelah take over (10.25%)</th></tr></thead>
+  <tbody>
+    <tr><td class="col-label">Cicilan/bulan</td><td class="col-curr">Rp 4.200.000</td><td class="col-new">Rp 3.520.000</td></tr>
+    <tr><td class="col-label">Total bunga 16 thn</td><td class="col-curr">Rp 282 juta</td><td class="col-new">Rp 228 juta</td></tr>
+    <tr class="savings-row"><td class="col-label"><strong>Penghematan</strong></td><td class="savings-empty">—</td><td class="savings-val">Rp 54 juta</td></tr>
+  </tbody>
+</table>
+<p>Penghematan cicilan bulanan: sekitar <strong>Rp 680 ribu</strong>.<br>
+<span style="font-size:12px;color:#555;">Biaya take over: Appraisal + notaris + provisi estimasi <strong>Rp 12–18 juta</strong>. Break even ~<strong>18–26 bulan</strong>.</span></p>
+<div class="sim-section-label">Rate terbaik saat ini</div>
+<p><strong>BCA menawarkan 10.25% fixed 2 tahun</strong> — selisih 2.25% dari rate Doni sekarang. Jauh di atas threshold 1.5%.</p>
+<div class="sim-section-label">Rekomendasiku</div>
+<p>Dengan sisa tenor 16 tahun dan selisih rate 2.25%, <strong>take over KPR worth it untuk Doni</strong>.<br>
+<strong>Opsi 1 — Sekarang:</strong> Hemat Rp 680 ribu/bulan mulai 2–3 bulan ke depan. Total Rp 54 juta.<br>
+<strong>Opsi 2 — Tunggu Q3 2026:</strong> Berpotensi dapat rate 9.75–10% kalau BI memangkas. Tapi lewatkan ~Rp 4 juta penghematan.<br>
+Mengingat situasi Doni, <strong>Opsi 1 lebih masuk akal</strong>.</p>`;
+
+  const KPR_T3_QUESTION = 'Bagaimana proses pengajuan take over KPR ke BCA?';
+  const KPR_T3_SESSION_MEMORY = [
+    { key: 'Intent', val: 'Vertical query (class 1) → <strong>PropertiBot</strong>', badge: 'class 1', badgeColor: '#10b981' },
+    { key: 'Routing', val: 'Single bot — process question', badge: 'direct', badgeColor: '#6b7280' },
+    { key: 'Partition', val: 'Active partition "<strong>Take Over KPR</strong>" continues', badge: 'active', badgeColor: '#34d399' },
+    { key: 'Conf.', val: '0.89 → proceeds', badge: 'high', badgeColor: '#34d399' }
+  ];
+  const KPR_T3_WORKFLOW_STEPS = [
+    { label: 'Classify intent: Vertical query (class 1)', ms: 94 }, { label: 'Route to PropertiBot (single bot)', ms: 72 },
+    { label: 'Match active partition: "Take Over KPR"', ms: 88 }, { label: 'Retrieve: Panduan Beli Jual & Sewa', ms: 298 },
+    { label: 'Retrieve: Panduan Hukum Properti', ms: 264 }, { label: 'Score confidence: 0.89', ms: 112 },
+    { label: 'Generate process guide answer', ms: 476 }
+  ];
+  const KPR_T3_ANSWER = `
+<p>Proses take over KPR ke bank baru umumnya memakan waktu <strong>4–8 minggu</strong>. Ini tahapannya:</p>
+<div class="process-steps">
+  <div class="process-step"><div class="step-left"><div class="step-num">1</div><div class="step-connector"></div></div>
+    <div class="step-body"><div class="step-head"><span class="step-title">Persiapan dokumen</span><span class="step-duration">1–2 minggu</span></div>
+    <div class="step-desc">KTP + KK, slip gaji 3 bulan, rekening koran 3 bulan, <strong>sertifikat rumah</strong>, IMB, PBB, surat keterangan outstanding KPR dari bank lama.</div></div></div>
+  <div class="process-step"><div class="step-left"><div class="step-num">2</div><div class="step-connector"></div></div>
+    <div class="step-body"><div class="step-head"><span class="step-title">Pengajuan ke BCA</span><span class="step-duration">1 minggu</span></div>
+    <div class="step-desc">Submit dokumen ke cabang BCA. BCA akan melakukan verifikasi awal dan memberi <strong>Letter of Offer</strong> jika lolos screening.</div></div></div>
+  <div class="process-step"><div class="step-left"><div class="step-num">3</div><div class="step-connector"></div></div>
+    <div class="step-body"><div class="step-head"><span class="step-title">Appraisal</span><span class="step-duration">1–2 minggu</span></div>
+    <div class="step-desc">BCA mengirim tim appraisal untuk menilai ulang propertimu. Nilai appraisal menentukan maksimal KPR yang bisa diambil alih.</div></div></div>
+  <div class="process-step"><div class="step-left"><div class="step-num">4</div></div>
+    <div class="step-body"><div class="step-head"><span class="step-title">Akad dan pelunasan</span><span class="step-duration">1–2 minggu</span></div>
+    <div class="step-desc"><strong>Akad kredit baru</strong> di hadapan notaris. BCA melunasi sisa KPR ke bank lama, cicilan baru mulai berjalan bulan berikutnya.</div></div></div>
+</div>
+<div class="process-note">⚠️ <strong>Yang perlu dicek sebelum mulai:</strong> Hubungi bank lama untuk konfirmasi penalti pelunasan dipercepat dan masukkan dalam kalkulasi total biaya take over.</div>`;
+
+  function showOrchPill() {
+    const pill = document.createElement('div');
+    pill.className = 'orch-pill';
+    pill.innerHTML = `<span class="orch-pill-dot"></span>Orchestrator · 3 bot parallel dispatch
+      <span class="orch-bot-tags"><span class="orch-bot-tag">Properti</span><span class="orch-bot-tag">Finance</span><span class="orch-bot-tag">News</span></span>`;
+    msgsEl.appendChild(pill); scroll();
+    return pill;
+  }
+
+  function addKprWorkflowTurn(steps) {
+    turnCount++;
+    wfCount.textContent = turnCount;
+    turnCountEl.textContent = turnCount;
+    const empty = wfBody.querySelector('.mp-empty');
+    if (empty) empty.remove();
+    const turn = document.createElement('div');
+    turn.className = 'wf-turn';
+    turn.innerHTML = `<div class="wf-turn-num">Turn ${turnCount} · ${now()}</div><div class="wf-steps">${
+      steps.map(s => `<div class="wf-step done"><span class="step-dot"></span><span class="step-label">${s.label}</span><span class="step-ms">${s.ms}ms</span></div>`).join('')
+    }</div>`;
+    wfBody.insertBefore(turn, wfBody.firstChild);
+  }
+
+  async function runKprTurn2() {
+    if (isTyping) return;
+    isTyping = true; sendBtn.disabled = true;
+    const existing = msgsEl.querySelector('.kpr-followups-el');
+    if (existing) existing.remove();
+    addUserMsg(KPR_T2_QUESTION);
+    await new Promise(r => setTimeout(r, 250));
+    const orchPill = showOrchPill();
+    await new Promise(r => setTimeout(r, 400));
+    sessionMemory.length = 0;
+    KPR_T2_SESSION_MEMORY.forEach(m => sessionMemory.push(m));
+    renderSessionMemory();
+    addTyping();
+    await new Promise(r => setTimeout(r, 2400));
+    removeTyping();
+    orchPill.style.transition = 'opacity 0.4s';
+    orchPill.style.opacity = '0.3';
+    addBotMsg(KPR_T2_ANSWER, ['detikProperti', 'detikFinance', 'detikNews']);
+    addKprWorkflowTurn(KPR_T2_WORKFLOW_STEPS);
+    Object.assign(userMemory, KPR_T2_FINAL_USER_MEMORY);
+    renderUserMemory();
+    totalTokens = Math.min(totalTokens + Math.floor(KPR_T2_ANSWER.length / 4) + 40, 1024);
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${(totalTokens/1024)*100}%`;
+    await new Promise(r => setTimeout(r, 400));
+    const cont = makeFollowUpsContainer(
+      ['Bagaimana proses pengajuan take over KPR ke BCA?', 'Dokumen apa saja yang perlu disiapkan?', 'Apakah ada penalti dari bank lama?'],
+      (idx) => { if (idx === 0) { cont.remove(); runKprTurn3(); } else showDemoToast('Pilih "Bagaimana proses pengajuan take over KPR ke BCA?" untuk melanjutkan demo'); }
+    );
+    cont.classList.add('kpr-followups-el');
+    isTyping = false; sendBtn.disabled = inputEl.value.trim().length === 0;
+  }
+
+  async function runKprTurn3() {
+    if (isTyping) return;
+    isTyping = true; sendBtn.disabled = true;
+    const existing = msgsEl.querySelector('.kpr-followups-el');
+    if (existing) existing.remove();
+    addUserMsg(KPR_T3_QUESTION);
+    sessionMemory.length = 0;
+    KPR_T3_SESSION_MEMORY.forEach(m => sessionMemory.push(m));
+    renderSessionMemory();
+    addTyping();
+    await new Promise(r => setTimeout(r, 1600));
+    removeTyping();
+    addBotMsg(KPR_T3_ANSWER, ['detikProperti']);
+    addKprWorkflowTurn(KPR_T3_WORKFLOW_STEPS);
+    totalTokens = Math.min(totalTokens + Math.floor(KPR_T3_ANSWER.length / 4) + 40, 1024);
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${(totalTokens/1024)*100}%`;
+    await new Promise(r => setTimeout(r, 400));
+    makeFollowUpsContainer(
+      ['Dokumen apa saja yang perlu disiapkan?', 'Apakah ada penalti dari bank lama?'],
+      () => showDemoToast('Demo berakhir di sini — hanya 3 turn yang dijalankan')
+    );
+    isTyping = false; sendBtn.disabled = inputEl.value.trim().length === 0;
+  }
+
+  async function runKprScenario() {
+    isTyping = true; sendBtn.disabled = true;
+    hideWelcomeAndQP();
+    addUserMsg(KPR_QUESTION);
+    sessionMemory.length = 0;
+    KPR_SESSION_MEMORY.forEach(m => sessionMemory.push(m));
+    renderSessionMemory();
+    await new Promise(r => setTimeout(r, 300));
+    addTyping();
+    await new Promise(r => setTimeout(r, 1800));
+    removeTyping();
+    addBotMsg(KPR_ANSWER, ['detikProperti', 'detikFinance']);
+    addKprWorkflowTurn(KPR_WORKFLOW_STEPS);
+    Object.assign(userMemory, KPR_FINAL_USER_MEMORY);
+    renderUserMemory();
+    totalTokens = Math.min(Math.floor(KPR_ANSWER.length / 4) + 40, 1024);
+    tokenUsed.textContent = `${totalTokens} / 1024`;
+    tokenBar.style.width = `${(totalTokens/1024)*100}%`;
+    await new Promise(r => setTimeout(r, 400));
+    const cont = makeFollowUpsContainer(
+      ['Simulasikan take over KPR untuk situasiku', 'Bank mana yang rate KPR-nya paling kompetitif?', 'Berapa penalti pelunasan dipercepat?'],
+      (idx) => { if (idx === 0) { cont.remove(); runKprTurn2(); } else showDemoToast('Pilih "Simulasikan take over KPR" untuk melanjutkan demo'); }
+    );
+    cont.classList.add('kpr-followups-el');
+    isTyping = false; sendBtn.disabled = inputEl.value.trim().length === 0;
+  }
+
+  // ── Scenario dispatcher ──
+  (function dispatchScenario() {
+    const scenario = sessionStorage.getItem('detik_ai_scenario');
+    if (!scenario) return;
+    sessionStorage.removeItem('detik_ai_scenario');
+    const dispatch = {
+      tom_lembong:     runTomScenario,
+      campak_outbreak: runCampakOutbreakScenario,
+      campak_bahaya:   runBahayaScenario,
+      campak_depth:    runDepthScenario,
+      campak_resolved: runResolvedScenario,
+      cicilan_kpr:     runKprScenario
+    };
+    const fn = dispatch[scenario];
+    if (fn) setTimeout(fn, 350);
+  })();
 </script>
 
 </body>
