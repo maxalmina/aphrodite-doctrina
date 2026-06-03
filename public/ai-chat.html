@@ -876,6 +876,156 @@
     .step-desc { font-size: 12.5px; color: #555; line-height: 1.6; }
     .step-desc strong { color: #1a1a1a; }
     .process-note { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #92400e; margin-top: 10px; line-height: 1.55; }
+
+    /* ── Mobile drawer controls (hidden on desktop) ── */
+    .mobile-sidebar-btn,
+    .mobile-panel-btn {
+      display: none;
+      width: 36px; height: 36px;
+      border: none; border-radius: 9px;
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .mobile-sidebar-btn:hover,
+    .mobile-panel-btn:hover { background: var(--border); color: var(--text); }
+
+    /* Drawer backdrop */
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 199;
+      backdrop-filter: blur(2px);
+      animation: overlayIn 0.2s ease both;
+    }
+    .drawer-overlay.active { display: block; }
+    @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      :root { --sidebar-w: 260px; --panel-w: 260px; }
+    }
+
+    @media (max-width: 768px) {
+      /* Show mobile buttons */
+      .mobile-sidebar-btn,
+      .mobile-panel-btn { display: flex; }
+
+      /* Hide desktop collapse toggles */
+      .sidebar-toggle-btn,
+      .panel-toggle-btn { display: none; }
+
+      /* Sidebar becomes a fixed left drawer */
+      .chat-sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100%;
+        width: var(--sidebar-w) !important;
+        z-index: 200;
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+      }
+      .chat-sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      /* Override desktop collapsed state on mobile */
+      .chat-sidebar.collapsed { width: var(--sidebar-w) !important; }
+      .chat-sidebar.collapsed .sidebar-section-label,
+      .chat-sidebar.collapsed .chat-history .hi-text,
+      .chat-sidebar.collapsed .chat-history .hi-time,
+      .chat-sidebar.collapsed .sidebar-topics,
+      .chat-sidebar.collapsed .new-chat-btn .btn-label { display: unset; }
+      .chat-sidebar.collapsed .history-item { justify-content: unset; padding: 9px 10px; }
+      .chat-sidebar.collapsed .history-item .hi-icon { font-size: 14px; }
+      .chat-sidebar.collapsed .sidebar-head { padding: 12px 12px 12px 16px; gap: 8px; }
+      .chat-sidebar.collapsed .new-chat-btn { padding: 9px 12px; justify-content: center; }
+      .chat-sidebar.collapsed .chat-history { padding: 0 8px 8px; }
+
+      /* Memory panel becomes a fixed right drawer */
+      .memory-panel {
+        position: fixed;
+        top: 0; right: 0;
+        height: 100%;
+        width: min(var(--panel-w), 88vw) !important;
+        z-index: 200;
+        transform: translateX(100%);
+        transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+        box-shadow: -4px 0 24px rgba(0,0,0,0.4);
+      }
+      .memory-panel.mobile-open {
+        transform: translateX(0);
+      }
+      /* Override desktop collapsed state on mobile */
+      .memory-panel.collapsed { width: min(var(--panel-w), 88vw) !important; }
+      .memory-panel.collapsed .mp-body,
+      .memory-panel.collapsed .mp-footer,
+      .memory-panel.collapsed .mp-title,
+      .memory-panel.collapsed .mp-live { display: unset; }
+      .memory-panel.collapsed .mp-header { justify-content: unset; padding: 12px 14px; }
+      .memory-panel.collapsed .panel-collapsed-label { display: none; }
+      /* show the close X button inside panel on mobile */
+      .memory-panel .panel-toggle-btn { display: flex; }
+
+      /* Topbar */
+      .topbar-inner { padding: 8px 14px; gap: 10px; }
+      .topbar .logo { font-size: 22px; }
+      .topbar .divider-v { display: none; }
+      .topbar .back-link { font-size: 0; gap: 0; }
+      .topbar .back-link::before { content: '←'; font-size: 18px; }
+
+      /* Chat header */
+      .chat-header { padding: 10px 14px; gap: 10px; }
+      .chat-header .info p { display: none; }
+      .chat-header .ai-icon-wrap { width: 34px; height: 34px; }
+      .chat-header .info h2 { font-size: 14px; }
+      /* Hide desktop share/delete on mobile to save space */
+      .chat-header .actions .icon-btn:first-child { display: none; }
+
+      /* Messages */
+      .chat-messages { padding: 14px 12px; gap: 14px; }
+      .msg-row { max-width: 100%; }
+      .msg-bubble { font-size: 13.5px; max-width: calc(100vw - 80px); }
+      .msg-avatar { width: 28px; height: 28px; font-size: 11px; }
+
+      /* Welcome */
+      .chat-welcome { padding: 24px 16px; gap: 12px; }
+      .welcome-icon { width: 56px; height: 56px; }
+      .chat-welcome h2 { font-size: 18px; }
+      .chat-welcome p { font-size: 13px; }
+      .starter-grid { grid-template-columns: 1fr; max-width: 100%; }
+
+      /* Input area */
+      .chat-input-area { padding: 10px 12px 14px; }
+      .input-row { border-radius: 12px; padding: 4px 4px 4px 12px; }
+      #main-chat-input { font-size: 15px; padding: 7px 0; }
+      .input-hint { font-size: 10px; }
+
+      /* Quick prompts — horizontal scroll, no wrap */
+      .quick-prompts {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 8px;
+        padding-bottom: 2px;
+      }
+      .quick-prompts::-webkit-scrollbar { display: none; }
+      .qp-btn { flex-shrink: 0; font-size: 11.5px; padding: 5px 10px; }
+    }
+
+    @media (max-width: 480px) {
+      .topbar .ai-label { font-size: 13px; }
+      .topbar .ai-label svg { display: none; }
+      .chat-welcome h2 { font-size: 16px; }
+      .starter-card { padding: 11px 13px; }
+      .starter-card .sc-icon { font-size: 17px; }
+    }
   </style>
 <link rel="stylesheet" href="/brand/brand.css" />
 <link rel="stylesheet" href="/brand/chat-overrides.css" />
@@ -902,6 +1052,9 @@
     </a>
   </div>
 </div>
+
+<!-- Mobile drawer overlay -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
 
 <!-- CHAT LAYOUT -->
 <div class="chat-layout">
@@ -982,6 +1135,11 @@
 
     <!-- Chat Header -->
     <div class="chat-header">
+      <button class="mobile-sidebar-btn" id="mobile-sidebar-btn" title="Riwayat chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
       <div class="ai-icon-wrap">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="12" r="8" stroke="white" stroke-width="1.5"/>
@@ -996,6 +1154,11 @@
       <div class="actions">
         <button class="icon-btn" title="Bagikan" onclick="alert('Fitur berbagi segera hadir!')">&#10548;</button>
         <button class="icon-btn" title="Hapus chat" id="clear-chat-btn">&#128465;</button>
+        <button class="mobile-panel-btn" id="mobile-panel-btn" title="AI Context">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/><path d="M9 10h6M9 14h4"/>
+          </svg>
+        </button>
       </div>
     </div>
 
@@ -1513,7 +1676,6 @@
     qpContainer.style.display = 'flex';
     inputEl.value = '';
     sendBtn.disabled = true;
-    // Reset panel
     sessionMemory.length = 0;
     renderSessionMemory();
     wfBody.innerHTML = '<div class="mp-empty">Belum ada percakapan</div>';
@@ -1521,6 +1683,7 @@
     turnCountEl.textContent = '0';
     tokenUsed.textContent = '0 / 1024';
     tokenBar.style.width = '0%';
+    if (isMobile()) closeAllDrawers();
   });
   clearBtn.addEventListener('click', () => {
     if (confirm('Hapus semua pesan di sesi ini?')) newChatBtn.click();
@@ -1554,8 +1717,68 @@
   });
 
   panelToggle.addEventListener('click', () => {
-    const collapsed = panelEl.classList.toggle('collapsed');
-    updatePanelIcon(collapsed);
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      closeAllDrawers();
+    } else {
+      const collapsed = panelEl.classList.toggle('collapsed');
+      updatePanelIcon(collapsed);
+    }
+  });
+
+  // ── Mobile drawers ──
+  const overlayEl         = document.getElementById('drawer-overlay');
+  const mobileSidebarBtn  = document.getElementById('mobile-sidebar-btn');
+  const mobilePanelBtn    = document.getElementById('mobile-panel-btn');
+
+  function isMobile() { return window.innerWidth <= 768; }
+
+  function closeAllDrawers() {
+    sidebarEl.classList.remove('mobile-open');
+    panelEl.classList.remove('mobile-open');
+    overlayEl.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function openSidebar() {
+    sidebarEl.classList.add('mobile-open');
+    panelEl.classList.remove('mobile-open');
+    overlayEl.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openPanel() {
+    panelEl.classList.add('mobile-open');
+    sidebarEl.classList.remove('mobile-open');
+    overlayEl.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  mobileSidebarBtn.addEventListener('click', () => {
+    if (sidebarEl.classList.contains('mobile-open')) closeAllDrawers();
+    else openSidebar();
+  });
+
+  mobilePanelBtn.addEventListener('click', () => {
+    if (panelEl.classList.contains('mobile-open')) closeAllDrawers();
+    else openPanel();
+  });
+
+  overlayEl.addEventListener('click', closeAllDrawers);
+
+  // Swipe-to-close on mobile
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (!isMobile()) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (sidebarEl.classList.contains('mobile-open') && dx < -60) closeAllDrawers();
+    if (panelEl.classList.contains('mobile-open') && dx > 60) closeAllDrawers();
+  }, { passive: true });
+
+  // Close drawers when a history item or topic chip is tapped on mobile
+  document.querySelectorAll('.history-item, .topic-chip').forEach(el => {
+    el.addEventListener('click', () => { if (isMobile()) closeAllDrawers(); });
   });
 
   // ── Shared helper for follow-up containers ──

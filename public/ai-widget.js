@@ -3,6 +3,13 @@
 
   const SCENARIO_GROUPS = [
     {
+      label: 'Kesehatan',
+      color: '#10b981',
+      items: [
+        { q: 'Wabah campak 2026: seberapa luas penyebarannya?', icon: '🦠', scenario: 'campak_outbreak', url: 'ai-chat.html' }
+      ]
+    },
+    {
       label: 'Hukum',
       color: '#f59e0b',
       items: [
@@ -10,20 +17,10 @@
       ]
     },
     {
-      label: 'Kesehatan',
-      color: '#10b981',
-      items: [
-        { q: 'Wabah campak 2026: seberapa luas penyebarannya?',      icon: '🦠', scenario: 'campak_outbreak', url: 'ai-chat.html' },
-        { q: 'Campak ini berbahaya nggak?',                           icon: '💉', scenario: 'campak_bahaya',  url: 'ai-chat.html' },
-        { q: 'Masih bahaya nggak campaknya? Ada perkembangan baru?',  icon: '🔄', scenario: 'campak_depth',   url: 'ai-chat.html' },
-        { q: 'Kirana sudah vaksin kemarin. Masih perlu khawatir?',    icon: '✅', scenario: 'campak_resolved',url: 'ai-chat.html' }
-      ]
-    },
-    {
       label: 'Properti',
       color: '#818cf8',
       items: [
-        { q: 'Kapan waktu terbaik untuk take over KPR?', icon: '💵', scenario: 'cicilan_kpr', url: 'ai-chat.html' }
+        { q: 'Kapan waktu terbaik untuk take over KPR?', icon: '🏠', scenario: 'cicilan_kpr', url: 'ai-chat.html' }
       ]
     }
   ];
@@ -160,6 +157,24 @@
     .ai-panel-footer input:focus { border-color: #e8192c; }
     .ai-panel-footer .send-btn { width: 34px; height: 34px; border-radius: 50%; background: #e8192c; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity 0.15s; }
     .ai-panel-footer .send-btn:hover { opacity: 0.85; }
+
+    @media (max-width: 480px) {
+      #detik-ai-fab { bottom: 16px; right: 16px; gap: 8px; }
+      #detik-ai-bubble-btn { width: 50px; height: 50px; }
+      #detik-ai-panel {
+        width: calc(100vw - 28px);
+        max-height: calc(100vh - 100px);
+        border-radius: 16px;
+      }
+      .ai-panel-msgs { min-height: 120px; }
+      .ai-suggestions { max-height: 180px; }
+      .ai-panel-footer input { font-size: 16px; } /* prevent iOS zoom */
+    }
+
+    @media (max-width: 380px) {
+      #detik-ai-panel { width: calc(100vw - 20px); }
+      #detik-ai-fab { right: 10px; bottom: 12px; }
+    }
   `;
 
   const style = document.createElement('style');
